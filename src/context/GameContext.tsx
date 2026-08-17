@@ -1,0 +1,37 @@
+import { createContext, useContext, ReactNode } from 'react'
+import { usePeerConnection } from '../hooks/usePeerConnection'
+import { GameState } from '../types'
+
+interface GameContextType {
+  gameState: GameState
+  isConnected: boolean
+  error: string | null
+  myPlayerId: string
+  isAdmin: boolean
+  createRoom: (adminName: string, isSpectator: boolean) => void
+  joinRoom: (roomId: string, playerName: string, isSpectator: boolean) => void
+  submitVote: (vote: number | null) => void
+  revealCards: () => void
+  resetVoting: () => void
+  startNewGame: () => void
+}
+
+const GameContext = createContext<GameContextType | null>(null)
+
+export function GameProvider({ children }: { children: ReactNode }) {
+  const peerConnection = usePeerConnection()
+
+  return (
+    <GameContext.Provider value={peerConnection}>
+      {children}
+    </GameContext.Provider>
+  )
+}
+
+export function useGame(): GameContextType {
+  const context = useContext(GameContext)
+  if (!context) {
+    throw new Error('useGame must be used within a GameProvider')
+  }
+  return context
+}
