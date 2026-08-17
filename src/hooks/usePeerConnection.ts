@@ -7,7 +7,6 @@ import {
   Player,
   StateSyncPayload,
   VotePayload,
-  PlayerLeftPayload,
 } from '../types'
 
 const PEER_PREFIX = 'planning-poker-'
