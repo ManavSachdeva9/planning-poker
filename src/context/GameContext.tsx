@@ -1,5 +1,5 @@
 import { createContext, useContext, ReactNode } from 'react'
-import { usePeerConnection } from '../hooks/usePeerConnection'
+import { useFirebaseConnection } from '../hooks/useFirebaseConnection'
 import { GameState } from '../types'
 
 interface GameContextType {
@@ -19,10 +19,10 @@ interface GameContextType {
 const GameContext = createContext<GameContextType | null>(null)
 
 export function GameProvider({ children }: { children: ReactNode }) {
-  const peerConnection = usePeerConnection()
+  const firebaseConnection = useFirebaseConnection()
 
   return (
-    <GameContext.Provider value={peerConnection}>
+    <GameContext.Provider value={firebaseConnection}>
       {children}
     </GameContext.Provider>
   )
