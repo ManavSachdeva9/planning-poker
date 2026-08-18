@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useGame } from '../context/GameContext'
 
+const ADMIN_SECRET = 'BoeingPokerAdmin'
+
 interface HomePageProps {
   onRoomCreated: () => void
 }
@@ -8,11 +10,20 @@ interface HomePageProps {
 export function HomePage({ onRoomCreated }: HomePageProps) {
   const [adminName, setAdminName] = useState('')
   const [isSpectator, setIsSpectator] = useState(false)
+  const [secretCode, setSecretCode] = useState('')
+  const [secretError, setSecretError] = useState('')
   const { createRoom } = useGame()
 
   const handleCreateRoom = (e: React.FormEvent) => {
     e.preventDefault()
     if (!adminName.trim()) return
+
+    if (secretCode !== ADMIN_SECRET) {
+      setSecretError('Invalid secret code. Access denied.')
+      return
+    }
+    setSecretError('')
+
     createRoom(adminName.trim(), isSpectator)
     onRoomCreated()
   }
@@ -25,6 +36,12 @@ export function HomePage({ onRoomCreated }: HomePageProps) {
           <p className="text-slate-400">Estimate stories together with your team</p>
         </div>
 
+        {secretError && (
+          <div className="mb-4 p-3 bg-red-900/50 border border-red-700 rounded-lg text-red-300 text-sm">
+            {secretError}
+          </div>
+        )}
+
         <form onSubmit={handleCreateRoom} className="space-y-6">
           <div>
             <label htmlFor="adminName" className="block text-sm font-medium text-slate-300 mb-2">
@@ -36,6 +53,21 @@ export function HomePage({ onRoomCreated }: HomePageProps) {
               value={adminName}
               onChange={(e) => setAdminName(e.target.value)}
               placeholder="Enter your name"
+              className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="secretCode" className="block text-sm font-medium text-slate-300 mb-2">
+              Admin Secret Code
+            </label>
+            <input
+              id="secretCode"
+              type="password"
+              value={secretCode}
+              onChange={(e) => { setSecretCode(e.target.value); setSecretError('') }}
+              placeholder="Enter admin secret code"
               className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               required
             />

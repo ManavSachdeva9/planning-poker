@@ -8,13 +8,12 @@ interface JoinPageProps {
 
 export function JoinPage({ roomId, onJoined }: JoinPageProps) {
   const [playerName, setPlayerName] = useState('')
-  const [isSpectator, setIsSpectator] = useState(false)
   const { joinRoom, error } = useGame()
 
   const handleJoin = (e: React.FormEvent) => {
     e.preventDefault()
     if (!playerName.trim()) return
-    joinRoom(roomId, playerName.trim(), isSpectator)
+    joinRoom(roomId, playerName.trim(), false)
     onJoined()
   }
 
@@ -50,19 +49,6 @@ export function JoinPage({ roomId, onJoined }: JoinPageProps) {
               className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               required
             />
-          </div>
-
-          <div className="flex items-center gap-3">
-            <input
-              id="joinSpectator"
-              type="checkbox"
-              checked={isSpectator}
-              onChange={(e) => setIsSpectator(e.target.checked)}
-              className="w-4 h-4 text-blue-500 bg-slate-700 border-slate-600 rounded focus:ring-blue-500"
-            />
-            <label htmlFor="joinSpectator" className="text-sm text-slate-300">
-              Join as Spectator (won't vote)
-            </label>
           </div>
 
           <button
