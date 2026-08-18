@@ -13,7 +13,7 @@ interface GameContextType {
   submitVote: (vote: number | null) => void
   revealCards: () => void
   resetVoting: () => void
-  startNewGame: () => void
+  startNewGame: (jiraUrl?: string) => void
 }
 
 const GameContext = createContext<GameContextType | null>(null)

@@ -199,11 +199,22 @@ export function useFirebaseConnection() {
   }, [])
 
   // Admin: start a new game
-  const startNewGame = useCallback(() => {
+  const startNewGame = useCallback((jiraUrl?: string) => {
     if (!isAdminRef.current || !roomIdRef.current) return
 
+    let jiraTicketId = ''
+    if (jiraUrl) {
+      const match = jiraUrl.match(/\/browse\/([A-Za-z]+-\d+)/) || jiraUrl.match(/([A-Za-z]+-\d+)/)
+      jiraTicketId = match ? match[1] : ''
+    }
+
     const roomRef = ref(db, `rooms/${roomIdRef.current}`)
-    update(roomRef, { isRevealed: false, isVotingActive: true })
+    update(roomRef, {
+      isRevealed: false,
+      isVotingActive: true,
+      jiraUrl: jiraUrl || '',
+      jiraTicketId: jiraTicketId,
+    })
 
     // Reset all player votes
     const playersRef = ref(db, `rooms/${roomIdRef.current}/players`)
