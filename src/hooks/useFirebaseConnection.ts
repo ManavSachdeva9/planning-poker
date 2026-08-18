@@ -126,7 +126,7 @@ export function useFirebaseConnection() {
         isAdmin: false,
       }
 
-      // Check if room exists and admin is present
+      // Check if room exists and admin is present BEFORE joining
       const roomRef = ref(db, `rooms/${upperRoomId}`)
       onValue(roomRef, (snapshot) => {
         if (!snapshot.exists()) {
@@ -140,17 +140,16 @@ export function useFirebaseConnection() {
           setError('Room is no longer active. The admin has left.')
           return
         }
-      }, { onlyOnce: true })
 
-      // Add player to room
-      const playerRef = ref(db, `rooms/${upperRoomId}/players/${playerId}`)
-      set(playerRef, newPlayer).then(() => {
-        // Remove player on disconnect
-        onDisconnect(playerRef).remove()
-        listenToRoom(upperRoomId)
-      }).catch((err) => {
-        setError(`Failed to join room: ${err.message}`)
-      })
+        // Room is valid — now add player
+        const playerRef = ref(db, `rooms/${upperRoomId}/players/${playerId}`)
+        set(playerRef, newPlayer).then(() => {
+          onDisconnect(playerRef).remove()
+          listenToRoom(upperRoomId)
+        }).catch((err) => {
+          setError(`Failed to join room: ${err.message}`)
+        })
+      }, { onlyOnce: true })
     },
     [listenToRoom]
   )
