@@ -11,6 +11,19 @@ import {
 
 const PEER_PREFIX = 'planning-poker-'
 
+const PEER_CONFIG = {
+  config: {
+    iceServers: [
+      { urls: 'stun:stun.l.google.com:19302' },
+      { urls: 'stun:stun1.l.google.com:19302' },
+      { urls: 'stun:stun2.l.google.com:19302' },
+      { urls: 'stun:stun.cloudflare.com:3478' },
+      { urls: 'stun:global.stun.twilio.com:3478' },
+    ],
+  },
+  debug: 1,
+}
+
 function generateRoomId(): string {
   return Math.random().toString(36).substring(2, 8).toUpperCase()
 }
@@ -105,7 +118,7 @@ export function usePeerConnection() {
       const roomId = generateRoomId()
       const peerId = PEER_PREFIX + roomId
 
-      const newPeer = new Peer(peerId)
+      const newPeer = new Peer(peerId, PEER_CONFIG)
 
       newPeer.on('open', (id) => {
         const adminPlayer: Player = {
@@ -163,7 +176,8 @@ export function usePeerConnection() {
   const joinRoom = useCallback(
     (roomId: string, playerName: string, isSpectator: boolean) => {
       const hostPeerId = PEER_PREFIX + roomId.toUpperCase()
-      const newPeer = new Peer()
+      const randomId = 'pp-' + Math.random().toString(36).substring(2, 10)
+      const newPeer = new Peer(randomId, PEER_CONFIG)
 
       newPeer.on('open', (id) => {
         setMyPlayerId(id)
