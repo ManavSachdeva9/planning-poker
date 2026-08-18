@@ -12,7 +12,7 @@ export function PlayerList() {
       <div className="space-y-2">
         {gameState.players.map((player) => {
           const isMe = player.id === myPlayerId
-          const hasVoted = player.vote !== null
+          const hasVoted = player.vote !== null && player.vote !== undefined && player.vote !== false
           const showVote = gameState.isRevealed && !player.isSpectator
 
           return (

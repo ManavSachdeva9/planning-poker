@@ -1,7 +1,7 @@
 export interface Player {
   id: string
   name: string
-  vote: number | null
+  vote: number | null | false
   isSpectator: boolean
   isAdmin: boolean
 }

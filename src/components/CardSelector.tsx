@@ -9,9 +9,13 @@ export function CardSelector() {
   if (!myPlayer || myPlayer.isSpectator) return null
   if (gameState.isRevealed) return null
 
+  const currentVote = (myPlayer.vote !== null && myPlayer.vote !== undefined && myPlayer.vote !== false)
+    ? myPlayer.vote as number
+    : null
+
   const handleCardClick = (value: number) => {
     // Toggle: if already selected, deselect
-    if (myPlayer.vote === value) {
+    if (currentVote === value) {
       submitVote(null)
     } else {
       submitVote(value)
@@ -25,7 +29,7 @@ export function CardSelector() {
       </h3>
       <div className="flex flex-wrap justify-center gap-2">
         {FIBONACCI_SEQUENCE.map((value) => {
-          const isSelected = myPlayer.vote === value
+          const isSelected = currentVote === value
           return (
             <button
               key={value}
@@ -47,9 +51,9 @@ export function CardSelector() {
           )
         })}
       </div>
-      {myPlayer.vote !== null && (
+      {currentVote !== null && (
         <p className="text-center text-blue-400 text-sm mt-3">
-          Your vote: <span className="font-bold">{myPlayer.vote}</span> (click again to change)
+          Your vote: <span className="font-bold">{currentVote}</span> (click again to change)
         </p>
       )}
     </div>

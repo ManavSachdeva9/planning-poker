@@ -6,7 +6,7 @@ export function ResultsDisplay() {
   if (!gameState.isRevealed) return null
 
   const votingPlayers = gameState.players.filter(
-    (p) => !p.isSpectator && p.vote !== null
+    (p) => !p.isSpectator && p.vote !== null && p.vote !== undefined && p.vote !== false
   )
 
   if (votingPlayers.length === 0) return null
@@ -14,7 +14,7 @@ export function ResultsDisplay() {
   // Count votes
   const voteCounts = new Map<number, number>()
   votingPlayers.forEach((p) => {
-    if (p.vote !== null) {
+    if (typeof p.vote === 'number') {
       voteCounts.set(p.vote, (voteCounts.get(p.vote) || 0) + 1)
     }
   })
@@ -30,7 +30,7 @@ export function ResultsDisplay() {
   })
 
   // Calculate average
-  const sum = votingPlayers.reduce((acc, p) => acc + (p.vote || 0), 0)
+  const sum = votingPlayers.reduce((acc, p) => acc + (typeof p.vote === 'number' ? p.vote : 0), 0)
   const average = (sum / votingPlayers.length).toFixed(1)
 
   // Sort votes for distribution display

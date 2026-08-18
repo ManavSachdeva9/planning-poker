@@ -7,7 +7,7 @@ export function AdminControls() {
   if (!myPlayer?.isAdmin) return null
 
   const votingPlayers = gameState.players.filter((p) => !p.isSpectator)
-  const votedCount = votingPlayers.filter((p) => p.vote !== null).length
+  const votedCount = votingPlayers.filter((p) => typeof p.vote === 'number').length
   const allVoted = votingPlayers.length > 0 && votedCount === votingPlayers.length
 
   return (

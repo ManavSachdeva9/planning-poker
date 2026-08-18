@@ -84,9 +84,8 @@ export function useFirebaseConnection() {
 
       const roomRef = ref(db, `rooms/${roomId}`)
       set(roomRef, roomData).then(() => {
-        // Set up cleanup when admin disconnects
-        const playerRef = ref(db, `rooms/${roomId}/players/${playerId}`)
-        onDisconnect(playerRef).remove()
+        // Delete the ENTIRE room when admin disconnects
+        onDisconnect(roomRef).remove()
 
         listenToRoom(roomId)
       }).catch((err) => {
@@ -113,11 +112,19 @@ export function useFirebaseConnection() {
         isAdmin: false,
       }
 
-      // Check if room exists first
+      // Check if room exists and admin is present
       const roomRef = ref(db, `rooms/${upperRoomId}`)
       onValue(roomRef, (snapshot) => {
         if (!snapshot.exists()) {
           setError('Room not found. Please check the room code.')
+          return
+        }
+        const data = snapshot.val()
+        const players = data.players ? Object.values(data.players) as Player[] : []
+        const adminPresent = players.some((p) => p.isAdmin)
+        if (!adminPresent) {
+          setError('Room is no longer active. The admin has left.')
+          return
         }
       }, { onlyOnce: true })
 
@@ -138,8 +145,13 @@ export function useFirebaseConnection() {
   const submitVote = useCallback(
     (vote: number | null) => {
       if (!roomIdRef.current || !myPlayerId) return
-      const playerRef = ref(db, `rooms/${roomIdRef.current}/players/${myPlayerId}/vote`)
-      set(playerRef, vote)
+      const playerVoteRef = ref(db, `rooms/${roomIdRef.current}/players/${myPlayerId}/vote`)
+      // Firebase removes null values, so use -1 as "no vote" sentinel or set the value
+      if (vote === null) {
+        set(playerVoteRef, false)  // false = deselected
+      } else {
+        set(playerVoteRef, vote)
+      }
     },
     [myPlayerId]
   )
@@ -163,9 +175,9 @@ export function useFirebaseConnection() {
     onValue(playersRef, (snapshot) => {
       const players = snapshot.val()
       if (players) {
-        const updates: Record<string, null> = {}
+        const updates: Record<string, false> = {}
         Object.keys(players).forEach((pid) => {
-          updates[`${pid}/vote`] = null
+          updates[`${pid}/vote`] = false
         })
         update(playersRef, updates)
       }
@@ -184,9 +196,9 @@ export function useFirebaseConnection() {
     onValue(playersRef, (snapshot) => {
       const players = snapshot.val()
       if (players) {
-        const updates: Record<string, null> = {}
+        const updates: Record<string, false> = {}
         Object.keys(players).forEach((pid) => {
-          updates[`${pid}/vote`] = null
+          updates[`${pid}/vote`] = false
         })
         update(playersRef, updates)
       }
