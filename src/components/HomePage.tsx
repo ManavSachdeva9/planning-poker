@@ -12,6 +12,7 @@ export function HomePage({ onRoomCreated }: HomePageProps) {
   const [isSpectator, setIsSpectator] = useState(false)
   const [secretCode, setSecretCode] = useState('')
   const [secretError, setSecretError] = useState('')
+  const [jiraUrl, setJiraUrl] = useState('')
   const { createRoom } = useGame()
 
   const handleCreateRoom = (e: React.FormEvent) => {
@@ -24,7 +25,7 @@ export function HomePage({ onRoomCreated }: HomePageProps) {
     }
     setSecretError('')
 
-    createRoom(adminName.trim(), isSpectator)
+    createRoom(adminName.trim(), isSpectator, jiraUrl.trim())
     onRoomCreated()
   }
 
@@ -32,7 +33,7 @@ export function HomePage({ onRoomCreated }: HomePageProps) {
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="bg-slate-800 rounded-2xl shadow-2xl p-8 w-full max-w-md border border-slate-700">
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-white mb-2 whitespace-nowrap">🃏 Boeing Planning Poker</h1>
+          <h1 className="font-bold text-white mb-2 whitespace-nowrap" style={{ fontSize: '30px' }}>🃏 Boeing Planning Poker</h1>
           <p className="text-slate-400">Estimate stories together with your team</p>
         </div>
 
@@ -70,6 +71,20 @@ export function HomePage({ onRoomCreated }: HomePageProps) {
               placeholder="Enter admin secret code"
               className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="jiraUrl" className="block text-sm font-medium text-slate-300 mb-2">
+              Jira Ticket URL <span className="text-slate-500">(optional)</span>
+            </label>
+            <input
+              id="jiraUrl"
+              type="url"
+              value={jiraUrl}
+              onChange={(e) => setJiraUrl(e.target.value)}
+              placeholder="https://jira.example.com/browse/PROJ-123"
+              className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
 

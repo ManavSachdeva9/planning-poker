@@ -11,6 +11,8 @@ export interface GameState {
   players: Player[]
   isRevealed: boolean
   isVotingActive: boolean
+  jiraUrl?: string
+  jiraTicketId?: string
 }
 
 export type MessageType =

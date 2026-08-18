@@ -38,6 +38,8 @@ export function useFirebaseConnection() {
           players,
           isRevealed: data.isRevealed || false,
           isVotingActive: data.isVotingActive || false,
+          jiraUrl: data.jiraUrl || '',
+          jiraTicketId: data.jiraTicketId || '',
         })
         setIsConnected(true)
         setError(null)
@@ -57,13 +59,20 @@ export function useFirebaseConnection() {
 
   // Admin: create a new room
   const createRoom = useCallback(
-    (adminName: string, isSpectator: boolean) => {
+    (adminName: string, isSpectator: boolean, jiraUrl?: string) => {
       const roomId = generateRoomId()
       const playerId = generatePlayerId()
 
       isAdminRef.current = true
       roomIdRef.current = roomId
       setMyPlayerId(playerId)
+
+      // Extract ticket ID from Jira URL (e.g., DABM-87723 from .../browse/DABM-87723)
+      let jiraTicketId = ''
+      if (jiraUrl) {
+        const match = jiraUrl.match(/\/browse\/([A-Za-z]+-\d+)/) || jiraUrl.match(/([A-Za-z]+-\d+)/)
+        jiraTicketId = match ? match[1] : ''
+      }
 
       const adminPlayer: Player = {
         id: playerId,
@@ -73,13 +82,18 @@ export function useFirebaseConnection() {
         isAdmin: true,
       }
 
-      const roomData = {
+      const roomData: Record<string, unknown> = {
         isRevealed: false,
         isVotingActive: true,
         createdAt: Date.now(),
         players: {
           [playerId]: adminPlayer,
         },
+      }
+
+      if (jiraUrl) {
+        roomData.jiraUrl = jiraUrl
+        roomData.jiraTicketId = jiraTicketId
       }
 
       const roomRef = ref(db, `rooms/${roomId}`)

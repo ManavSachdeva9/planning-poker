@@ -8,7 +8,7 @@ interface GameContextType {
   error: string | null
   myPlayerId: string
   isAdmin: boolean
-  createRoom: (adminName: string, isSpectator: boolean) => void
+  createRoom: (adminName: string, isSpectator: boolean, jiraUrl?: string) => void
   joinRoom: (roomId: string, playerName: string, isSpectator: boolean) => void
   submitVote: (vote: number | null) => void
   revealCards: () => void

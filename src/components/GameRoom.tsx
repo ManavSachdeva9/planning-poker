@@ -46,6 +46,18 @@ export function GameRoom() {
                   ? 'Voting in progress — select your estimate'
                   : 'Waiting for admin to start voting'}
               </p>
+              {gameState.jiraTicketId && (
+                <div className="mt-2">
+                  <a
+                    href={gameState.jiraUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-900/40 border border-blue-700 rounded-md text-blue-300 text-sm hover:bg-blue-900/60 transition-colors"
+                  >
+                    🎫 <span className="font-mono font-semibold">{gameState.jiraTicketId}</span>
+                  </a>
+                </div>
+              )}
             </div>
             {myPlayer && (
               <div className="text-right">
