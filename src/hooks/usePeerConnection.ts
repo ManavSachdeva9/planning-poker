@@ -121,6 +121,7 @@ export function usePeerConnection() {
       const newPeer = new Peer(peerId, PEER_CONFIG)
 
       newPeer.on('open', (id) => {
+        console.log('[Admin] Peer open with ID:', id)
         const adminPlayer: Player = {
           id,
           name: adminName,
@@ -141,7 +142,9 @@ export function usePeerConnection() {
       })
 
       newPeer.on('connection', (conn) => {
+        console.log('[Admin] Incoming connection from:', conn.peer)
         conn.on('open', () => {
+          console.log('[Admin] Connection opened with:', conn.peer)
           connectionsRef.current.set(conn.peer, conn)
         })
 
@@ -180,10 +183,20 @@ export function usePeerConnection() {
       const newPeer = new Peer(randomId, PEER_CONFIG)
 
       newPeer.on('open', (id) => {
+        console.log('[Player] Peer open with ID:', id)
+        console.log('[Player] Connecting to host:', hostPeerId)
         setMyPlayerId(id)
         const conn = newPeer.connect(hostPeerId, { reliable: true })
 
+        // Timeout if connection doesn't open within 10 seconds
+        const connectTimeout = setTimeout(() => {
+          if (!conn.open) {
+            setError('Could not connect to the room. Make sure the admin has the game open.')
+          }
+        }, 10000)
+
         conn.on('open', () => {
+          clearTimeout(connectTimeout)
           connectionsRef.current.set(hostPeerId, conn)
           // Send join message
           const joinMessage: PeerMessage = {
