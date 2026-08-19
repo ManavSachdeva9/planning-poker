@@ -29,6 +29,15 @@ export function ResultsDisplay() {
     }
   })
 
+  // Check for tie or no clear winner (only when more than 1 voter)
+  const isTie = votingPlayers.length > 1 &&
+    Array.from(voteCounts.values()).filter((count) => count === maxCount).length > 1
+
+  // Check if no number got majority (all votes are different — no number has more than 1 vote)
+  const noConsensus = votingPlayers.length > 1 && maxCount === 1
+
+  const needsRevote = isTie || noConsensus
+
   // Calculate average
   const sum = votingPlayers.reduce((acc, p) => acc + (typeof p.vote === 'number' ? p.vote : 0), 0)
   const average = (sum / votingPlayers.length).toFixed(1)
@@ -44,10 +53,17 @@ export function ResultsDisplay() {
 
       {/* Final Estimate */}
       <div className="text-center mb-5">
-        <div className="inline-block bg-green-600 text-white px-6 py-3 rounded-xl">
-          <span className="text-sm block text-green-200">Final Estimate (Highest Voted)</span>
-          <span className="text-3xl font-bold">{finalEstimate}</span>
-        </div>
+        {needsRevote ? (
+          <div className="inline-block bg-amber-600 text-white px-6 py-3 rounded-xl">
+            <span className="text-sm block text-amber-200">No Consensus</span>
+            <span className="text-xl font-bold">{isTie ? 'Tie — Vote Again' : 'No clear winner — Vote Again'}</span>
+          </div>
+        ) : (
+          <div className="inline-block bg-green-600 text-white px-6 py-3 rounded-xl">
+            <span className="text-sm block text-green-200">Final Estimate (Highest Voted)</span>
+            <span className="text-3xl font-bold">{finalEstimate}</span>
+          </div>
+        )}
       </div>
 
       {/* Stats */}
