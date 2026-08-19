@@ -1,7 +1,7 @@
 export interface Player {
   id: string
   name: string
-  vote: number | null | false
+  vote: number | string | null | false
   isSpectator: boolean
   isAdmin: boolean
 }
@@ -52,4 +52,4 @@ export interface PlayerLeftPayload {
   playerId: string
 }
 
-export const FIBONACCI_SEQUENCE = [0, 1, 2, 3, 5, 8, 13, 21]
+export const FIBONACCI_SEQUENCE: (number | string)[] = [0, 1, 2, 3, 5, 8, 13, '☕']

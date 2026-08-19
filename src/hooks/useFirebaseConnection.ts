@@ -156,12 +156,11 @@ export function useFirebaseConnection() {
 
   // Submit a vote
   const submitVote = useCallback(
-    (vote: number | null) => {
+    (vote: number | string | null) => {
       if (!roomIdRef.current || !myPlayerId) return
       const playerVoteRef = ref(db, `rooms/${roomIdRef.current}/players/${myPlayerId}/vote`)
-      // Firebase removes null values, so use -1 as "no vote" sentinel or set the value
       if (vote === null) {
-        set(playerVoteRef, false)  // false = deselected
+        set(playerVoteRef, false)
       } else {
         set(playerVoteRef, vote)
       }

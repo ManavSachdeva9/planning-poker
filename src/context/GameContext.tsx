@@ -10,7 +10,7 @@ interface GameContextType {
   isAdmin: boolean
   createRoom: (adminName: string, isSpectator: boolean, jiraUrl?: string) => void
   joinRoom: (roomId: string, playerName: string, isSpectator: boolean) => void
-  submitVote: (vote: number | null) => void
+  submitVote: (vote: number | string | null) => void
   revealCards: () => void
   resetVoting: () => void
   startNewGame: (jiraUrl?: string) => void

@@ -10,11 +10,10 @@ export function CardSelector() {
   if (gameState.isRevealed) return null
 
   const currentVote = (myPlayer.vote !== null && myPlayer.vote !== undefined && myPlayer.vote !== false)
-    ? myPlayer.vote as number
+    ? myPlayer.vote
     : null
 
-  const handleCardClick = (value: number) => {
-    // Toggle: if already selected, deselect
+  const handleCardClick = (value: number | string) => {
     if (currentVote === value) {
       submitVote(null)
     } else {

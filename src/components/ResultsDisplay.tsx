@@ -11,9 +11,13 @@ export function ResultsDisplay() {
 
   if (votingPlayers.length === 0) return null
 
-  // Count votes
+  // Separate numeric votes from coffee break votes
+  const numericVoters = votingPlayers.filter((p) => typeof p.vote === 'number')
+  const coffeeBreakVoters = votingPlayers.filter((p) => p.vote === '☕')
+
+  // Count numeric votes
   const voteCounts = new Map<number, number>()
-  votingPlayers.forEach((p) => {
+  numericVoters.forEach((p) => {
     if (typeof p.vote === 'number') {
       voteCounts.set(p.vote, (voteCounts.get(p.vote) || 0) + 1)
     }
@@ -39,9 +43,9 @@ export function ResultsDisplay() {
 
   const needsRevote = isTie || noConsensus
 
-  // Calculate average
-  const sum = votingPlayers.reduce((acc, p) => acc + (typeof p.vote === 'number' ? p.vote : 0), 0)
-  const average = (sum / votingPlayers.length).toFixed(1)
+  // Calculate average (only numeric votes)
+  const sum = numericVoters.reduce((acc, p) => acc + (typeof p.vote === 'number' ? p.vote : 0), 0)
+  const average = numericVoters.length > 0 ? (sum / numericVoters.length).toFixed(1) : '—'
 
   // Sort votes for distribution display
   const sortedVotes = Array.from(voteCounts.entries()).sort((a, b) => a[0] - b[0])
@@ -68,7 +72,7 @@ export function ResultsDisplay() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 gap-3 mb-4">
+      <div className="grid grid-cols-3 gap-3 mb-4">
         <div className="bg-slate-800 rounded-lg p-3 text-center">
           <span className="text-slate-400 text-xs block">Average</span>
           <span className="text-white font-bold text-lg">{average}</span>
@@ -76,6 +80,10 @@ export function ResultsDisplay() {
         <div className="bg-slate-800 rounded-lg p-3 text-center">
           <span className="text-slate-400 text-xs block">Total Voters</span>
           <span className="text-white font-bold text-lg">{votingPlayers.length}</span>
+        </div>
+        <div className="bg-slate-800 rounded-lg p-3 text-center">
+          <span className="text-slate-400 text-xs block">☕ Break</span>
+          <span className="text-white font-bold text-lg">{coffeeBreakVoters.length}</span>
         </div>
       </div>
 
