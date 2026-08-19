@@ -38,7 +38,7 @@ export function GameRoom() {
         <div className="bg-slate-800 rounded-2xl shadow-2xl p-6 border border-slate-700">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-white whitespace-nowrap">🃏 Boeing Planning Poker</h1>
+              <h1 className="text-2xl font-bold text-white whitespace-nowrap">✈️ Boeing Planning Poker</h1>
               <p className="text-slate-400 text-sm mt-1">
                 {gameState.isRevealed
                   ? 'Cards revealed — review the results below'

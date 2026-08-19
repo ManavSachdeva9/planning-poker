@@ -33,7 +33,7 @@ export function HomePage({ onRoomCreated }: HomePageProps) {
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="bg-slate-800 rounded-2xl shadow-2xl p-8 w-full max-w-md border border-slate-700">
         <div className="text-center mb-8">
-          <h1 className="font-bold text-white mb-2 whitespace-nowrap" style={{ fontSize: '30px' }}>🃏 Boeing Planning Poker</h1>
+          <h1 className="font-bold text-white mb-2 whitespace-nowrap" style={{ fontSize: '30px' }}>✈️ Boeing Planning Poker</h1>
           <p className="text-slate-400">Estimate stories together with your team</p>
         </div>
 
