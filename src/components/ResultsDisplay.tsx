@@ -30,11 +30,12 @@ export function ResultsDisplay() {
   })
 
   // Check for tie or no clear winner (only when more than 1 voter)
-  const isTie = votingPlayers.length > 1 &&
-    Array.from(voteCounts.values()).filter((count) => count === maxCount).length > 1
-
-  // Check if no number got majority (all votes are different — no number has more than 1 vote)
+  // noConsensus: all votes are different (every number has exactly 1 vote)
   const noConsensus = votingPlayers.length > 1 && maxCount === 1
+
+  // isTie: two or more numbers share the highest vote count (but not all unique)
+  const isTie = !noConsensus && votingPlayers.length > 1 &&
+    Array.from(voteCounts.values()).filter((count) => count === maxCount).length > 1
 
   const needsRevote = isTie || noConsensus
 
